@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 
 class ManualPlayPage extends StatefulWidget {
@@ -19,6 +20,19 @@ class _ManualPlayPageState extends State<ManualPlayPage> {
   ];
 
   String? _currentSoundAsset;
+  late AssetsAudioPlayer _assetsAudioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  }
+
+  @override
+  void dispose() {
+    _assetsAudioPlayer.dispose();
+    super.dispose();
+  }
 
   Widget _buildTitle() {
     return Text(
@@ -47,11 +61,22 @@ class _ManualPlayPageState extends State<ManualPlayPage> {
     return Container();
   }
 
+  Future<void> _openPlayer(String assetPath) async {
+    await _assetsAudioPlayer.open(
+      Playlist(audios: [Audio(assetPath)], startIndex: 0),
+      showNotification: true,
+      autoStart: true,
+    );
+  }
+
   Widget _buildSoundTile(String assetPath) {
     const size = 200.0;
     final soundName = assetPath.split('/').last;
-    return InkWell(
-      onTap: () {
+    final isSelecting = _currentSoundAsset == assetPath;
+    return GestureDetector(
+      onTap: () async {
+        await _assetsAudioPlayer.pause();
+        await _openPlayer(assetPath);
         setState(() {
           _currentSoundAsset = assetPath;
         });
@@ -61,7 +86,7 @@ class _ManualPlayPageState extends State<ManualPlayPage> {
         height: size,
         width: size,
         decoration: BoxDecoration(
-          color: Colors.orange,
+          color: isSelecting ? Colors.redAccent : Colors.pinkAccent,
           shape: BoxShape.circle,
         ),
         child: Padding(
@@ -69,7 +94,7 @@ class _ManualPlayPageState extends State<ManualPlayPage> {
           child: Center(
             child: Text(
               soundName,
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, color: Colors.white),
               overflow: TextOverflow.clip,
             ),
           ),
