@@ -12,23 +12,33 @@ class HomePage extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: Routes.routes,
-      home: Builder(
-        builder: (context) {
-          return Scaffold(
-            body: Center(
-              child: GestureDetector(
-                onTap: () {
-                 Navigator.pushNamed(context, RouteNames.manualPlayPage);
-                },
-                child: Image.asset(
-                  'assets/images/heart_wing.png',
-                  height: 200,
+      home: Builder(builder: (context) {
+        return Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.pushNamed(context, RouteNames.manualPlayPage);
+                  },
+                  child: Image.asset(
+                    'assets/images/heart_wing.png',
+                    height: 200,
+                  ),
                 ),
               ),
-            ),
-          );
-        }
-      ),
+              Text(
+                'Sound of heart',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.pinkAccent,
+                ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 }
